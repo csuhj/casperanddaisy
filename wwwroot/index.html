@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+        </style>
+        <link href="css/main.css" rel="stylesheet">
+    </head>
+    <header style="background-color: lightgray;">
+        <span style="display:grid; grid-template-columns: auto auto 1fr; gap: 8px;">
+            <div style="grid-column: 1; display:grid; grid-template-columns: auto auto">
+                <div style="grid-row: 1; justify-self: center;">
+                    <img src="svg/casper.svg" style="width: 30px" />
+                    <img src="svg/daisy.svg" style="width: 30px" />
+                </div>
+                <span style="font-size: 10px; grid-row: 2;" >Casper and Daisy</span>
+            </div>
+            <a href="fixtures.html" style="grid-column: 2; align-self: center;">Fixtures</a>
+        </span>
+    </header>
+    <section style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; grid-template-rows: 1fr; margin:20px">
+        <svg viewBox="0 0 390 120" style="grid-column: 1 / span 4; grid-row: 1">
+            <path id="curve-orig" d="M73.2,148.6 c4-6.1,65.5-96.8,178.6-95.6 c111.3,1.2,170.8,90.3,175.1,97" />
+            <path id="curve" d="M15,120.6 c4-6.1,65.5-96.8,178.6-95.6 c111.3,1.2,170.8,90.3,175.1,97" />
+            <text width="500">
+              <textPath xlink:href="#curve">
+                Casper And Daisy Predict!
+              </textPath>
+            </text>
+        </svg>
+        <img src="svg/casper.svg" style="width: 70%; grid-column: 2; grid-row: 1; justify-self: center; align-self: end;" />
+        <img src="svg/daisy.svg" style="width: 70%; grid-column: 3; grid-row: 1; justify-self: center; align-self: end;" />
+    </section>
+    <section style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; margin:20px">
+        <h1 style="grid-column: 1">Next game:</h1>
+        <div style="grid-column: 2">
+            <h3>Germany v Scotland</h3>
+            <p style="font-size: 25px;">Friday 14th June 8pm</p>
+            <p style="font-size: 25px;">Allianz Arena, Munich</p>
+        </div>
+    </section>
+    <section style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; margin:40px 20px 20px 20px">
+        <h1 style="grid-column: 1; margin:4px">We predict...</h1>
+        <h1 style="grid-column: 2; grid-row: 1; margin:4px">Scotland win!</h1>
+        <h1 style="grid-column: 2; grid-row: 2; margin:4px">0 - 1</h1>
+    </section>
+</html>
