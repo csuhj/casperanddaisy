@@ -1,0 +1,13 @@
+<section style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; margin:20px">
+    <h1 style="grid-column: 1">Next game:</h1>
+    <div style="grid-column: 2">
+        @if (fixture) {
+        <h3>{{fixture.home}} v {{fixture.away}}</h3>
+        <p style="font-size: 25px;">{{fixture.dateTime | date: 'EEEE dd MMMM, ha'}}</p>
+        <p style="font-size: 25px;">{{fixture.venue.stadium}}, {{fixture.venue.city}}</p>
+        }
+        @else {
+            <h3>No fixture!</h3>
+        }
+    </div>
+</section>
