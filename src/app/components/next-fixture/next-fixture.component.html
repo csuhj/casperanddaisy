@@ -2,9 +2,11 @@
     <h1 style="grid-column: 1">Next game:</h1>
     <div style="grid-column: 2">
         @if (fixture) {
-        <h3>{{fixture.home}} v {{fixture.away}}</h3>
-        <p style="font-size: 25px;">{{fixture.dateTime | date: 'EEEE dd MMMM, ha'}}</p>
-        <p style="font-size: 25px;">{{fixture.venue.stadium}}, {{fixture.venue.city}}</p>
+            <h3>{{fixture.home}} v {{fixture.away}}</h3>
+            <p style="font-size: 25px;">{{fixture.dateTime | date: 'EEEE dd MMMM, ha'}}</p>
+            @if (venue) {
+                <p style="font-size: 25px;">{{venue.stadium}}, {{venue.city}}</p>
+            }
         }
         @else {
             <h3>No fixture!</h3>

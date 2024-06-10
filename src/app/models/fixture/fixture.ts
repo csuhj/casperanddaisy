@@ -1,5 +1,3 @@
-import { Venue } from "../venue/venue";
-
 export enum RoundEnum {
     Group = 'Group',
     R16 = 'R16',
@@ -15,7 +13,7 @@ export class Fixture {
     public away: string;
     public round: RoundEnum;
     public groupName: string;
-    public venue: Venue;
+    public venueCity: string;
 
     public constructor(fixture: Partial<Fixture>) {
         this.match = fixture?.match ?? 1;
@@ -24,6 +22,6 @@ export class Fixture {
         this.away = fixture?.away ?? '';
         this.round = fixture?.round ?? RoundEnum.Group;
         this.groupName = fixture?.groupName ?? '';
-        this.venue = fixture?.venue ?? new Venue({});
+        this.venueCity = fixture?.venueCity ?? '';
     }
 }

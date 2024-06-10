@@ -1,0 +1,14 @@
+{
+    "venues": [
+        {"city":"Munich","stadium":"Allianz Arena"},
+        {"city":"Cologne","stadium":"RheinEnergieStadion"},
+        {"city":"Berlin", "stadium":"Olympiastadion"},
+        {"city":"Dortmund","stadium":"BVB Stadion"},
+        {"city":"Hamburg","stadium":"Volksparkstadion"},
+        {"city":"Stuttgart","stadium":"MHPArena"},
+        {"city":"Gelsenkirchen","stadium":"Arena AufSchalke"},
+        {"city":"Frankfurt","stadium":"Waldstadion"},
+        {"city":"Düsseldorf","stadium":"Merkur Spiel-Arena"},
+        {"city":"Leipzig","stadium":"Red Bull Arena"}
+    ]
+}

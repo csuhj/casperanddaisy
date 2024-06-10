@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Fixture, RoundEnum } from '../models/fixture/fixture';
-import { Venue } from '../models/venue/venue';
+import { Fixture, RoundEnum } from '../../models/fixture/fixture';
+import { Venue } from '../../models/venue/venue';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { IFixtures } from '../api-interface/fixtures/fixtures.interface';
+import { IFixtures } from '../../api-interface/fixtures/fixtures.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -25,10 +25,7 @@ export class FixtureService {
           groupName: f.groupName,
           home: f.home,
           away: f.away,
-          venue: new Venue({
-            city: f.venue,
-            stadium: 'The Arena'
-          })
+          venueCity: f.venue,
         });
       }) ?? []
     ));

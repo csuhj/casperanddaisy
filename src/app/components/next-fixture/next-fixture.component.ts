@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FixtureService } from '../../services/fixture.service';
+import { FixtureService } from '../../services/fixture/fixture.service';
 import { Fixture } from '../../models/fixture/fixture';
 import { DatePipe } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, combineLatest, takeUntil } from 'rxjs';
+import { VenueService } from '../../services/venue/venue.service';
+import { Venue } from '../../models/venue/venue';
 
 @Component({
   selector: 'app-next-fixture',
@@ -13,16 +15,23 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class NextFixtureComponent implements OnInit, OnDestroy {
   public fixture?: Fixture;
+  public venue?: Venue;
 
   private readonly destroy$ = new Subject<void>();
 
-  public constructor(private fixtureService: FixtureService) {
+  public constructor(private fixtureService: FixtureService, private venueService: VenueService) {
   }
 
   ngOnInit(): void {
-    this.fixtureService.getNextFixture()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(fixture => (this.fixture = fixture));
+    combineLatest([
+      this.fixtureService.getNextFixture(),
+      this.venueService.getVenues()
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([fixture, venues]) => {
+        this.fixture = fixture;
+        this.venue = venues.find(v => v.city === fixture?.venueCity);
+      });
   }
 
   ngOnDestroy() {
