@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Result } from '../../models/result/result';
 
 @Component({
   selector: 'app-prediction',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './prediction.component.scss'
 })
 export class PredictionComponent {
+  @Input() prediction: Result | undefined;
 
 }
