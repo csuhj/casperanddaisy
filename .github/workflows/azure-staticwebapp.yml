@@ -1,4 +1,5 @@
 # See https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-azure/deploying-to-azure-static-web-app
+# See also https://learn.microsoft.com/en-gb/azure/static-web-apps/deployment-token-management
 
 name: Deploy web app to Azure Static Web Apps
 
