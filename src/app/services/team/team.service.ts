@@ -3,6 +3,7 @@ import { Team } from '../../models/team/team';
 import { map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ITeams } from '../../api-interface/teams/teams.interface';
+import { MadfutStats } from '../../models/madfut-stats/madfut-stats';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,12 @@ export class TeamService {
       map((teams) => teams?.teams?.map(t => {
         return new Team({
           name: t.name,
-          ranking: t.ranking
+          ranking: t.ranking,
+          madfut: !t.madfut ? undefined : new MadfutStats({
+            bestAttacker: t.madfut.bestAttacker,
+            bestDefender: t.madfut.bestDefender,
+            rankedSquadPlayers: t.madfut.rankedSquadPlayers,
+          })
         });
       }) ?? []
     ));
