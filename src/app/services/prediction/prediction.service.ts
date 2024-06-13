@@ -11,24 +11,24 @@ export class PredictionService {
     let homeGoals = 0;
     let awayGoals = 0;
 
-    if (homeTeam.madfut.bestAttacker > awayTeam.madfut.bestDefender) {
+    if (homeTeam.madfut.bestAttacker > awayTeam.madfut.bestDefender + 3) {
       homeGoals += 1;
     }
-    if (awayTeam.madfut.bestAttacker > homeTeam.madfut.bestDefender) {
+    if (awayTeam.madfut.bestAttacker > homeTeam.madfut.bestDefender + 3) {
       awayGoals += 1;
     } 
 
-    if (homeTeam.madfut.rankedSquadPlayers > awayTeam.madfut.rankedSquadPlayers) {
+    if (homeTeam.madfut.rankedSquadPlayers > awayTeam.madfut.rankedSquadPlayers + 3) {
       homeGoals += 1;
     }
-    if (awayTeam.madfut.rankedSquadPlayers > homeTeam.madfut.rankedSquadPlayers) {
+    if (awayTeam.madfut.rankedSquadPlayers > homeTeam.madfut.rankedSquadPlayers + 3) {
       awayGoals += 1;
     }
 
-    if (homeTeam.ranking < awayTeam.ranking - 3) {
+    if (homeTeam.ranking < awayTeam.ranking - 5) {
       homeGoals += 1;
     }
-    if (awayTeam.ranking < homeTeam.ranking - 3) {
+    if (awayTeam.ranking < homeTeam.ranking - 5) {
       awayGoals += 1;
     }
 
