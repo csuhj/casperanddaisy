@@ -1,3 +1,11 @@
 <article style="max-width: 1000px; margin: auto;">
-  <h1>Fixtures go here...</h1>
+  <h1>Fixtures</h1>
+  <ul>
+  @for (fixture of fixtures; track fixture) {
+    <li style="margin: 8px">
+      <div>{{ fixture.dateTime | date: 'dd/MM/yy HH:mm' }} {{ fixture.home }} v {{ fixture.away }}</div>
+      <div>{{ fixture.round }} {{ fixture.groupName }} {{ fixture.venueCity }}</div>
+    </li>
+  }
+  </ul>
 </article>
