@@ -36,7 +36,7 @@ export class PredictionService {
     }
 
     if (homeGoals === awayGoals && round !== RoundEnum.Group) {
-      if (homeTeam.ranking > awayTeam.ranking) {
+      if (homeTeam.ranking < awayTeam.ranking) {
         homeShootoutPenalties = 5;
         awayShootoutPenalties = 4;
       } else {
