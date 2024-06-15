@@ -1,6 +1,9 @@
 export class GroupTableEntry {
     public team: string;
     public played: number;
+    public won: number;
+    public lost: number;
+    public drawn: number;
     public for: number;
     public against: number;
     public points: number;
@@ -12,6 +15,9 @@ export class GroupTableEntry {
     public constructor(groupTableEntry: Partial<GroupTableEntry>) {
         this.team = groupTableEntry?.team ?? '';
         this.played = groupTableEntry?.played ?? 0;
+        this.won = groupTableEntry?.won ?? 0;
+        this.lost = groupTableEntry?.lost ?? 0;
+        this.drawn = groupTableEntry?.drawn ?? 0;
         this.for = groupTableEntry?.for ?? 0;
         this.against = groupTableEntry?.against ?? 0;
         this.points = groupTableEntry?.points ?? 0;

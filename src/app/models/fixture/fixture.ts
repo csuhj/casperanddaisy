@@ -1,3 +1,5 @@
+import { Team } from "../team/team";
+
 export enum RoundEnum {
     Group = 'Group',
     R16 = 'R16',
@@ -23,5 +25,30 @@ export class Fixture {
         this.round = fixture?.round ?? RoundEnum.Group;
         this.groupName = fixture?.groupName ?? '';
         this.venueCity = fixture?.venueCity ?? '';
+    }
+
+    public static getTeamsPerGroup(fixtures: Fixture[], teams: Team[]) {
+        const teamsPerGroup: {[groupName: string]: Team[]} = {};
+        fixtures.filter(f => f.round === RoundEnum.Group).forEach(fixture => {
+          let teamsInGroup = teamsPerGroup[fixture.groupName];
+          if (!teamsInGroup) {
+            teamsInGroup = [];
+            teamsPerGroup[fixture.groupName] = teamsInGroup;
+          }
+          if (!teamsInGroup.find(t => t.name === fixture.home)) {
+            const homeTeam = teams.find(t => t.name === fixture.home);
+            if (homeTeam) {
+                teamsInGroup.push(homeTeam);
+            }
+          }
+          if (!teamsInGroup.find(t => t.name === fixture.away)) {
+            const awayTeam = teams.find(t => t.name === fixture.away);
+            if (awayTeam) {
+                teamsInGroup.push(awayTeam);
+            }
+          }
+        });
+    
+        return teamsPerGroup;
     }
 }

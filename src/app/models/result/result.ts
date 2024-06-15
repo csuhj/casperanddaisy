@@ -43,6 +43,36 @@ export class Result {
         this.type = result?.type ?? ResultTypeEnum.Actual;
     }
 
+    public pointsForTeam(teamName: string) {
+        if (this.winner == teamName) {
+            return 3;
+        } else if (this.winner === undefined) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public goalsForTeam(teamName: string) {
+        if (this.home == teamName) {
+            return this.homeGoals;
+        } else if (this.away === teamName) {
+            return this.awayGoals;
+        } else {
+            return 0;
+        }
+    }
+
+    public goalsAgainstTeam(teamName: string) {
+        if (this.home == teamName) {
+            return this.awayGoals;
+        } else if (this.away === teamName) {
+            return this.homeGoals;
+        } else {
+            return 0;
+        }
+    }
+
     public resultString(): string {
         if (this.homeGoals > this.awayGoals) {
             return `${this.home} win!`;
@@ -100,5 +130,5 @@ export class Result {
         });
     
         return groupResults;
-      }
+    }
 }

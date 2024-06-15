@@ -1,88 +1,51 @@
 import { Fixture, RoundEnum } from "../fixture/fixture";
 import { GroupTableEntry } from "../group-table-entry/group-table-entry";
 import { Result } from "../result/result";
+import { Team } from "../team/team";
 
 export class GroupTable {
     public groupName: string;
+    public teams: Team[];
     public entries: GroupTableEntry[];
     public results: Result[];
 
     public constructor(groupTable: Partial<GroupTable>) {
         this.groupName = groupTable?.groupName ?? '';
+        this.teams = groupTable?.teams ?? [];
         this.entries = groupTable?.entries ?? [];
         this.results = groupTable?.results ?? [];
     }
 
     public calculate() {
-        switch (this.groupName)
-        {
-            case 'A':
-                this.entries = [
-                    new GroupTableEntry({ team: 'Germany', played: 3, points: 7, for: 6, against: 1}),
-                    new GroupTableEntry({ team: 'Switzerland', played: 3, points: 7, for: 5, against: 1}),
-                    new GroupTableEntry({ team: 'Hungary', played: 3, points: 3, for: 1, against: 5}),
-                    new GroupTableEntry({ team: 'Scotland', played: 3, points: 0, for: 0, against: 6})
-                ];
-                break;                
-
-            case 'B':
-                this.entries = [
-                    new GroupTableEntry({ team: 'Italy', played: 3, points: 9, for: 6, against: 0}),
-                    new GroupTableEntry({ team: 'Spain', played: 3, points: 6, for: 4, against: 1}),
-                    new GroupTableEntry({ team: 'Croatia', played: 3, points: 3, for: 3, against: 3}),
-                    new GroupTableEntry({ team: 'Albania', played: 3, points: 0, for: 0, against: 9})
-                ];
-                break;
-
-            case 'C':
-                this.entries = [
-                    new GroupTableEntry({ team: 'England', played: 3, points: 9, for: 9, against: 0}),
-                    new GroupTableEntry({ team: 'Denmark', played: 3, points: 6, for: 3, against: 3}),
-                    new GroupTableEntry({ team: 'Serbia', played: 3, points: 3, for: 2, against: 4}),
-                    new GroupTableEntry({ team: 'Slovenia', played: 3, points: 0, for: 0, against: 7})
-                ];
-                break;
-
-            case 'D':
-                this.entries = [
-                    new GroupTableEntry({ team: 'Netherlands', played: 3, points: 7, for: 6, against: 2}),
-                    new GroupTableEntry({ team: 'France', played: 3, points: 5, for: 6, against: 2}),
-                    new GroupTableEntry({ team: 'Poland', played: 3, points: 4, for: 5, against: 6}),
-                    new GroupTableEntry({ team: 'Austria', played: 3, points: 0, for: 1, against: 7})
-                ];
-                break;
-
-            case 'E':
-                this.entries = [
-                    new GroupTableEntry({ team: 'Belgium', played: 3, points: 9, for: 8, against: 1}),
-                    new GroupTableEntry({ team: 'Ukraine', played: 3, points: 4, for: 4, against: 3}),
-                    new GroupTableEntry({ team: 'Slovakia', played: 3, points: 4, for: 3, against: 3}),
-                    new GroupTableEntry({ team: 'Romania', played: 3, points: 0, for: 0, against: 7})
-                ];
-                break;
-
-            case 'F':
-                this.entries = [
-                    new GroupTableEntry({ team: 'Portugal', played: 3, points: 9, for: 9, against: 0}),
-                    new GroupTableEntry({ team: 'Turkey', played: 3, points: 6, for: 4, against: 5}),
-                    new GroupTableEntry({ team: 'Czechia', played: 3, points: 1, for: 3, against: 7}),
-                    new GroupTableEntry({ team: 'Georgia', played: 3, points: 1, for: 3, against: 7})
-                ];
-                break;
-            }
+        this.entries = this.teams.map(team => {
+            const resultsInvolvingTeam = this.results.filter(r => r.home === team.name || r.away === team.name);
+            return new GroupTableEntry({
+                team: team.name,
+                played: resultsInvolvingTeam.length,
+                won: resultsInvolvingTeam.reduce((partialSum, r) => partialSum + (r.winner === team.name? 1: 0), 0),
+                lost: resultsInvolvingTeam.reduce((partialSum, r) => partialSum + (r.winner !== undefined && r.winner !== team.name? 1: 0), 0),
+                drawn: resultsInvolvingTeam.reduce((partialSum, r) => partialSum + (r.winner === undefined? 1: 0), 0),
+                for: resultsInvolvingTeam.reduce((partialSum, r) => partialSum + r.goalsForTeam(team.name), 0),
+                against: resultsInvolvingTeam.reduce((partialSum, r) => partialSum + r.goalsAgainstTeam(team.name), 0),
+                points: resultsInvolvingTeam.reduce((partialSum, r) => partialSum + r.pointsForTeam(team.name), 0),
+            });
+        }
+        );
     }
 
     public sortTable() {
         GroupTableEntry.sortTableEntries(this.entries);
     }
 
-    public static calculateGroupTables(groupResults: {[groupName: string]: Result[]}) {
+    public static calculateGroupTables(teamsPerGroup: {[groupName: string]: Team[]}, resultsPerGroup: {[groupName: string]: Result[]}) {
         const groupTables: GroupTable[] = [];
-        Object.keys(groupResults).sort().forEach(groupName => {
-          const resultsForGroup = groupResults?.[groupName];
+        Object.keys(resultsPerGroup).sort().forEach(groupName => {
+          const teamsForGroup = teamsPerGroup[groupName];
+          const resultsForGroup = resultsPerGroup?.[groupName];
           if (resultsForGroup) {
             const groupTable = new GroupTable({
               groupName: groupName,
+              teams: teamsForGroup,
               results: resultsForGroup,
             });
 

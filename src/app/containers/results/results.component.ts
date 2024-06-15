@@ -51,8 +51,9 @@ export class ResultsComponent {
           Result.groupResults(groupResults, (home, away) => 
             fixtures.find(f => f.home === home && f.away === away)?.groupName ?? ''
           );
-
-        this.groupTables = GroupTable.calculateGroupTables(resultsPerGroup);
+        
+        const teamsPerGroup = Fixture.getTeamsPerGroup(fixtures, teams);
+        this.groupTables = GroupTable.calculateGroupTables(teamsPerGroup, resultsPerGroup);
 
         GroupTable.resolveR16Fixtures(fixtures, this.groupTables);
         this.r16Results = this.predictResultsForRound(RoundEnum.R16, teams);
