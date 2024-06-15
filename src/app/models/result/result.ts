@@ -31,4 +31,23 @@ export class Result {
     public scoreLineString(): string {
         return `${this.homeGoals} - ${this.awayGoals}`;
     }
+
+    public fullScoreLineString(): string {
+        return `${this.home} ${this.homeGoals} - ${this.awayGoals} ${this.away}`;
+    }
+
+    public static groupResults(results: Result[], getGroupForFixture: (home: string, away: string) => string) {
+        const groupResults: {[groupName: string]: Result[]} = {};
+        results.forEach(result => {
+          const group = getGroupForFixture(result.home, result.away);
+          let resultsInGroup = groupResults[group];
+          if (!resultsInGroup) {
+            resultsInGroup = [];
+            groupResults[group] = resultsInGroup;
+          }
+          resultsInGroup.push(result);
+        });
+    
+        return groupResults;
+      }
 }

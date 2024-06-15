@@ -1,0 +1,31 @@
+<article style="max-width: 1000px; margin: auto;">
+  <h1>Results</h1>
+  @if (groupTables) {
+    @for (groupTable of groupTables; track groupTable) {
+      <h3>Group {{ groupTable.groupName }}</h3>
+      <table style="gap: 5px">
+        <tr>
+          <th>Team</th>
+          <th>P</th>
+          <th>GD</th>
+          <th>Pts</th>
+        </tr>
+        @for (entry of groupTable.entries; track entry) {
+        <tr>
+          <td>{{ entry.team }}</td>
+          <td>{{ entry.played }}</td>
+          <td>{{ entry.goalDifference }}</td>
+          <td>{{ entry.points }}</td>
+        </tr>
+        }
+      </table>
+      <ul>
+        @for (result of groupTable.results; track result) {
+        <li style="margin: 8px">
+          <div>{{ result.fullScoreLineString() }}</div>
+        </li>
+        }
+      </ul>
+    }
+  }
+</article>
