@@ -1,3 +1,4 @@
+import { Fixture, RoundEnum } from "../fixture/fixture";
 import { GroupTableEntry } from "../group-table-entry/group-table-entry";
 import { Result } from "../result/result";
 
@@ -72,14 +73,88 @@ export class GroupTable {
     }
 
     public sortTable() {
-        this.entries.sort((x, y) => {
-            if (x.points !== y.points) {
-                return y.points - x.points;
-            }
-            if (x.goalDifference !== y.goalDifference) {
-                return y.goalDifference - x.goalDifference;
-            }
-            return x.team.localeCompare(y.team);
+        GroupTableEntry.sortTableEntries(this.entries);
+    }
+
+    public static calculateGroupTables(groupResults: {[groupName: string]: Result[]}) {
+        const groupTables: GroupTable[] = [];
+        Object.keys(groupResults).sort().forEach(groupName => {
+          const resultsForGroup = groupResults?.[groupName];
+          if (resultsForGroup) {
+            const groupTable = new GroupTable({
+              groupName: groupName,
+              results: resultsForGroup,
+            });
+
+            groupTable.calculate();
+            groupTable.sortTable();
+            groupTables?.push(groupTable);
+          }
         });
+        return groupTables;
+    }
+
+    public static resolveR16Fixtures(fixtures: Fixture[], groupTables: GroupTable[]) {
+        const thirdPlaceTableEntries: GroupTableEntry[] = [];
+        groupTables.forEach(groupTable => {
+            GroupTable.applyFixtureFromGroupTable(fixtures, groupTable, `1${groupTable.groupName}`);
+            GroupTable.applyFixtureFromGroupTable(fixtures, groupTable, `2${groupTable.groupName}`);
+
+            thirdPlaceTableEntries.push(groupTable.entries[2]);
+        })
+
+        //TODO: Actually work out proper rules here!
+        GroupTableEntry.sortTableEntries(thirdPlaceTableEntries);
+        GroupTable.applyTeamToFixture(fixtures, '3DEF', thirdPlaceTableEntries[0].team)
+        GroupTable.applyTeamToFixture(fixtures, '3ADEF', thirdPlaceTableEntries[1].team)
+        GroupTable.applyTeamToFixture(fixtures, '3ABC', thirdPlaceTableEntries[2].team)
+        GroupTable.applyTeamToFixture(fixtures, '3ABCD', thirdPlaceTableEntries[3].team)
+    }
+
+    public static resolveKnockoutFixtures(fixtures: Fixture[], previousRoundResults: Result[], round: RoundEnum) {
+        switch(round) {
+            case RoundEnum.QF:
+            case RoundEnum.SF:
+            case RoundEnum.F:
+                fixtures.filter(f => f.round === round).forEach(fixture => {
+                    GroupTable.applyFixtureFromKnockoutResult(fixtures, previousRoundResults, fixture.home);
+                    GroupTable.applyFixtureFromKnockoutResult(fixtures, previousRoundResults, fixture.away);
+                })
+                break;
+            default:
+                throw new Error(`Can't resolve knockout fixtures from previous round results for the round ${round}`);
+        }
+    }
+
+    private static applyFixtureFromGroupTable(fixtures: Fixture[], groupTable: GroupTable, fixtureName: string) {
+        const tableIndex = parseInt(fixtureName.substring(0, 1)) - 1; 
+        GroupTable.applyTeamToFixture(fixtures, fixtureName, groupTable.entries[tableIndex].team)
+    }
+
+    private static applyFixtureFromKnockoutResult(fixtures: Fixture[], previousRoundResults: Result[], fixtureName: string) {
+        const matchNumber = parseInt(fixtureName.substring(1, 3));
+        const referencedFixture = fixtures.find(f => f.match === matchNumber);
+        if (!referencedFixture) {
+            return;
+        }
+        const referencedResult = previousRoundResults.find(r => r.home === referencedFixture.home && r.away === referencedFixture.away);
+        if (!referencedResult || !referencedResult.winner) {
+            return;
+        }
+
+        GroupTable.applyTeamToFixture(fixtures, fixtureName, referencedResult.winner)
+    }
+
+    private static applyTeamToFixture(fixtures: Fixture[], fixtureName: string, teamName: string) {
+        const fixture = fixtures.find(f => f.home === fixtureName || f.away === fixtureName);
+        if (!fixture) {
+            return;
+        }
+
+        if (fixture.home === fixtureName) {
+            fixture.home = teamName;
+        } else if (fixture.away === fixtureName) {
+            fixture.away = teamName;
+        }
     }
 }

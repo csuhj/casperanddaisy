@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Team } from '../../models/team/team';
-import { Result } from '../../models/result/result';
+import { Result, ResultTypeEnum } from '../../models/result/result';
+import { RoundEnum } from '../../models/fixture/fixture';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PredictionService {
 
-  public getPrediction(homeTeam: Team, awayTeam: Team) {
+  public getPrediction(homeTeam: Team, awayTeam: Team, round: RoundEnum) {
     let homeGoals = 0;
     let awayGoals = 0;
+    let homeShootoutPenalties: number | undefined;
+    let awayShootoutPenalties: number | undefined;
 
     if (homeTeam.madfut.bestAttacker > awayTeam.madfut.bestDefender + 3) {
       homeGoals += 1;
@@ -32,11 +35,24 @@ export class PredictionService {
       awayGoals += 1;
     }
 
+    if (homeGoals === awayGoals && round !== RoundEnum.Group) {
+      if (homeTeam.ranking > awayTeam.ranking) {
+        homeShootoutPenalties = 5;
+        awayShootoutPenalties = 4;
+      } else {
+        homeShootoutPenalties = 4;
+        awayShootoutPenalties = 5;
+      }
+    }
+
     return new Result({
       home: homeTeam.name,
       away: awayTeam.name,
       homeGoals,
-      awayGoals
+      awayGoals,
+      homeShootoutPenalties,
+      awayShootoutPenalties,
+      type: ResultTypeEnum.Prediction
     });
   }
 }

@@ -40,8 +40,9 @@ export class HomeComponent {
 
         const homeTeam = teams.find(t => t.name === nextFixture?.home);
         const awayTeam = teams.find(t => t.name === nextFixture?.away);
-        if (homeTeam && awayTeam) {
-          this.nextFixturePrediction = this.predictionService.getPrediction(homeTeam, awayTeam)
+        const round = nextFixture?.round;
+        if (homeTeam && awayTeam && round) {
+          this.nextFixturePrediction = this.predictionService.getPrediction(homeTeam, awayTeam, round)
         } else {
           this.nextFixturePrediction = undefined;
         }

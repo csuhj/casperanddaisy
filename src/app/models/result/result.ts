@@ -6,15 +6,40 @@ export enum ResultTypeEnum {
 export class Result {
     public home: string;
     public homeGoals: number;
+    public homeShootoutPenalties?: number;
     public away: string;
     public awayGoals: number;
+    public awayShootoutPenalties?: number;
     public type: ResultTypeEnum;
+
+    public get winner() {
+        if (this.homeGoals > this.awayGoals) {
+            return this.home;
+        } else if (this.awayGoals > this.homeGoals) {
+            return this.away;
+        } else {
+            if (!this.homeShootoutPenalties || !this.awayShootoutPenalties) {
+                return undefined;
+            } else {
+                if (this.homeShootoutPenalties > this.awayShootoutPenalties) {
+                    return this.home
+                } else if (this.awayShootoutPenalties > this.homeShootoutPenalties) {
+                    return this.away
+                } else {
+                    return undefined;
+                }
+            }
+
+        }
+    }
 
     public constructor(result: Partial<Result>) {
         this.home = result?.home ?? '';
         this.homeGoals = result?.homeGoals ?? 0;
+        this.homeShootoutPenalties = result?.homeShootoutPenalties;
         this.away = result?.away ?? '';
         this.awayGoals = result?.awayGoals ?? 0;
+        this.awayShootoutPenalties = result?.awayShootoutPenalties;
         this.type = result?.type ?? ResultTypeEnum.Actual;
     }
 
@@ -24,16 +49,42 @@ export class Result {
         } else if (this.awayGoals > this.homeGoals) {
             return `${this.away} win!`;
         } else {
-            return 'Draw!';
+            if (!this.homeShootoutPenalties || !this.awayShootoutPenalties) {
+                return 'Draw!';
+            } else {
+                if (this.homeShootoutPenalties > this.awayShootoutPenalties) {
+                    return `${this.home} win on penalties!`;
+                } else if (this.awayShootoutPenalties > this.homeShootoutPenalties) {
+                    return `${this.away} win on penalties!`;
+                } else {
+                    return 'Draw after penalty shootout!?!';
+                }
+            }
         }
     }
 
     public scoreLineString(): string {
-        return `${this.homeGoals} - ${this.awayGoals}`;
+        if (!this.homeShootoutPenalties || !this.awayShootoutPenalties) {
+            return `${this.homeGoals} - ${this.awayGoals}`;
+        } else {
+            return `${this.homeGoals} - ${this.awayGoals} (${this.homeShootoutPenalties} - ${this.awayShootoutPenalties})`;
+        }
     }
 
     public fullScoreLineString(): string {
-        return `${this.home} ${this.homeGoals} - ${this.awayGoals} ${this.away}`;
+        if (!this.homeShootoutPenalties || !this.awayShootoutPenalties) {
+            return `${this.home} ${this.homeGoals} - ${this.awayGoals} ${this.away}`;
+        } else {
+            let penaltiesScoreLine;
+            if (this.homeShootoutPenalties > this.awayShootoutPenalties) {
+                penaltiesScoreLine = `${this.home} win ${this.homeShootoutPenalties} - ${this.awayShootoutPenalties} on penalties`;
+            } else if (this.awayShootoutPenalties > this.homeShootoutPenalties) {
+                penaltiesScoreLine = `${this.away} win ${this.awayShootoutPenalties} - ${this.homeShootoutPenalties} on penalties`;
+            } else {
+                penaltiesScoreLine = 'draw after penalty shootout!?!';
+            }
+            return `${this.home} ${this.homeGoals} - ${this.awayGoals} ${this.away} (${penaltiesScoreLine})`;
+        }
     }
 
     public static groupResults(results: Result[], getGroupForFixture: (home: string, away: string) => string) {

@@ -43,7 +43,7 @@ export class FixturesComponent {
             const awayTeam = teams.find(t => t.name === f.away);
             return (!homeTeam || !awayTeam)? 
               new Result({}) : 
-              this.predictionService.getPrediction(homeTeam, awayTeam);
+              this.predictionService.getPrediction(homeTeam, awayTeam, f.round);
           });
 
         this.changeDetectorRef.detectChanges();

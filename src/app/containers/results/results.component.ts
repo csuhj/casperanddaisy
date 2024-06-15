@@ -9,9 +9,10 @@ import { PredictionService } from '../../services/prediction/prediction.service'
 import { Result } from '../../models/result/result';
 import { TeamService } from '../../services/team/team.service';
 import { GroupTable } from '../../models/group-table/group-table';
+import { Team } from '../../models/team/team';
 
 @Component({
-  selector: 'app-fixtures',
+  selector: 'app-results',
   standalone: true,
   imports: [DatePipe],
   templateUrl: './results.component.html',
@@ -21,6 +22,10 @@ export class ResultsComponent {
   public fixtures?: Fixture[];
   public venues?: Venue[];
   public groupTables?: GroupTable[];
+  public r16Results?: Result[];
+  public qfResults?: Result[];
+  public sfResults?: Result[];
+  public fResult?: Result;
 
   private readonly destroy$ = new Subject<void>();
 
@@ -37,35 +42,38 @@ export class ResultsComponent {
         this.fixtures = fixtures;
         this.venues = venues;
 
-        const results = this.fixtures
-          ?.filter(f => f.round === RoundEnum.Group)
-          .map(f => {
-            const homeTeam = teams.find(t => t.name === f.home);
-            const awayTeam = teams.find(t => t.name === f.away);
-            return (!homeTeam || !awayTeam)? 
-              new Result({}) : 
-              this.predictionService.getPrediction(homeTeam, awayTeam);
-          });
+        const groupResults = this.predictResultsForRound(RoundEnum.Group, teams);
+        if (!groupResults) {
+          return;
+        }
 
-        const groupResults = 
-          Result.groupResults(results, (home, away) => 
+        const resultsPerGroup = 
+          Result.groupResults(groupResults, (home, away) => 
             fixtures.find(f => f.home === home && f.away === away)?.groupName ?? ''
           );
 
-        this.groupTables = [];
-        Object.keys(groupResults).sort().forEach(groupName => {
-          const resultsForGroup = groupResults?.[groupName];
-          if (resultsForGroup) {
-            const groupTable = new GroupTable({
-              groupName: groupName,
-              results: resultsForGroup,
-            });
+        this.groupTables = GroupTable.calculateGroupTables(resultsPerGroup);
 
-            groupTable.calculate();
-            groupTable.sortTable();
-            this.groupTables?.push(groupTable);
-          }
-        });
+        GroupTable.resolveR16Fixtures(fixtures, this.groupTables);
+        this.r16Results = this.predictResultsForRound(RoundEnum.R16, teams);
+        if (!this.r16Results) {
+          return;
+        }
+
+        GroupTable.resolveKnockoutFixtures(fixtures, this.r16Results, RoundEnum.QF);
+        this.qfResults = this.predictResultsForRound(RoundEnum.QF, teams);
+        if (!this.qfResults) {
+          return;
+        }
+
+        GroupTable.resolveKnockoutFixtures(fixtures, this.qfResults, RoundEnum.SF);
+        this.sfResults = this.predictResultsForRound(RoundEnum.SF, teams);
+        if (!this.sfResults) {
+          return;
+        }
+
+        GroupTable.resolveKnockoutFixtures(fixtures, this.sfResults, RoundEnum.F);
+        this.fResult = this.predictResultsForRound(RoundEnum.F, teams)?.[0];
 
         this.changeDetectorRef.detectChanges();
       });
@@ -74,5 +82,17 @@ export class ResultsComponent {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private predictResultsForRound(round: RoundEnum, teams: Team[]) {
+    return this.fixtures
+      ?.filter(f => f.round === round)
+      .map(f => {
+        const homeTeam = teams.find(t => t.name === f.home);
+        const awayTeam = teams.find(t => t.name === f.away);
+        return (!homeTeam || !awayTeam)? 
+          new Result({}) : 
+          this.predictionService.getPrediction(homeTeam, awayTeam, round);
+      });
   }
 }
