@@ -1,5 +1,6 @@
 export interface ITeam {
-    bestAttacker: number;
     bestDefender: number;
     rankedSquadPlayers: number;
+    bestKeeper: number;
+    top5Attackers: number[];
 }

@@ -14,17 +14,17 @@ export class PredictionService {
     let homeShootoutPenalties: number | undefined;
     let awayShootoutPenalties: number | undefined;
 
-    if (homeTeam.madfut.bestAttacker > awayTeam.madfut.bestDefender + 3) {
+    if (homeTeam.madfut.bestAttacker > awayTeam.madfut.bestDefender + 2) {
       homeGoals += 1;
     }
-    if (awayTeam.madfut.bestAttacker > homeTeam.madfut.bestDefender + 3) {
+    if (awayTeam.madfut.bestAttacker > homeTeam.madfut.bestDefender + 2) {
       awayGoals += 1;
     } 
 
-    if (homeTeam.madfut.rankedSquadPlayers > awayTeam.madfut.rankedSquadPlayers + 3) {
+    if (homeTeam.madfut.rankedSquadPlayers > awayTeam.madfut.rankedSquadPlayers + 2) {
       homeGoals += 1;
     }
-    if (awayTeam.madfut.rankedSquadPlayers > homeTeam.madfut.rankedSquadPlayers + 3) {
+    if (awayTeam.madfut.rankedSquadPlayers > homeTeam.madfut.rankedSquadPlayers + 2) {
       awayGoals += 1;
     }
 
@@ -36,12 +36,22 @@ export class PredictionService {
     }
 
     if (homeGoals === awayGoals && round !== RoundEnum.Group) {
-      if (homeTeam.ranking < awayTeam.ranking) {
-        homeShootoutPenalties = 5;
-        awayShootoutPenalties = 4;
-      } else {
-        homeShootoutPenalties = 4;
-        awayShootoutPenalties = 5;
+      homeShootoutPenalties = homeTeam.madfut.top5Attackers.reduce((partialSum, a) => partialSum + (a + 5 > awayTeam.madfut.bestKeeper? 1 : 0), 0);
+      awayShootoutPenalties = awayTeam.madfut.top5Attackers.reduce((partialSum, a) => partialSum + (a + 5 > homeTeam.madfut.bestKeeper? 1 : 0), 0);
+
+      if (homeShootoutPenalties < 2) {
+        homeShootoutPenalties = 2;
+      }
+      if (awayShootoutPenalties < 2) {
+        awayShootoutPenalties = 2;
+      }
+
+      if (homeShootoutPenalties === awayShootoutPenalties) {
+        if (homeTeam.ranking < awayTeam.ranking) {
+          homeShootoutPenalties += 1;
+        } else {
+          awayShootoutPenalties += 1;
+        }
       }
     }
 

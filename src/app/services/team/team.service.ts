@@ -21,9 +21,10 @@ export class TeamService {
           name: t.name,
           ranking: t.ranking,
           madfut: !t.madfut ? undefined : new MadfutStats({
-            bestAttacker: t.madfut.bestAttacker,
             bestDefender: t.madfut.bestDefender,
             rankedSquadPlayers: t.madfut.rankedSquadPlayers,
+            bestKeeper: t.madfut.bestKeeper,
+            top5Attackers: [...t.madfut.top5Attackers],
           })
         });
       }) ?? []

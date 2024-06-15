@@ -18,7 +18,7 @@ export class Result {
         } else if (this.awayGoals > this.homeGoals) {
             return this.away;
         } else {
-            if (!this.homeShootoutPenalties || !this.awayShootoutPenalties) {
+            if (this.homeShootoutPenalties === undefined || this.awayShootoutPenalties === undefined) {
                 return undefined;
             } else {
                 if (this.homeShootoutPenalties > this.awayShootoutPenalties) {
@@ -49,7 +49,7 @@ export class Result {
         } else if (this.awayGoals > this.homeGoals) {
             return `${this.away} win!`;
         } else {
-            if (!this.homeShootoutPenalties || !this.awayShootoutPenalties) {
+            if (this.homeShootoutPenalties === undefined || this.awayShootoutPenalties === undefined) {
                 return 'Draw!';
             } else {
                 if (this.homeShootoutPenalties > this.awayShootoutPenalties) {
@@ -64,7 +64,7 @@ export class Result {
     }
 
     public scoreLineString(): string {
-        if (!this.homeShootoutPenalties || !this.awayShootoutPenalties) {
+        if (this.homeShootoutPenalties === undefined || this.awayShootoutPenalties === undefined) {
             return `${this.homeGoals} - ${this.awayGoals}`;
         } else {
             return `${this.homeGoals} - ${this.awayGoals} (${this.homeShootoutPenalties} - ${this.awayShootoutPenalties})`;
@@ -72,7 +72,7 @@ export class Result {
     }
 
     public fullScoreLineString(): string {
-        if (!this.homeShootoutPenalties || !this.awayShootoutPenalties) {
+        if (this.homeShootoutPenalties === undefined || this.awayShootoutPenalties === undefined) {
             return `${this.home} ${this.homeGoals} - ${this.awayGoals} ${this.away}`;
         } else {
             let penaltiesScoreLine;
