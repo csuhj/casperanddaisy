@@ -1,5 +1,5 @@
 export interface IFixture {
-    match: string;
+    match: number;
     date: string;
     time: string;
     home: string;

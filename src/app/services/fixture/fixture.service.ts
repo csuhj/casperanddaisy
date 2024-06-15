@@ -19,7 +19,7 @@ export class FixtureService {
       map((fixtures) => fixtures?.fixtures?.map(f => {
         const dateString = f.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
         return new Fixture({
-          match: parseInt(f.match),
+          match: f.match,
           dateTime: new Date(`${dateString}T${f.time}:00`),
           round: RoundEnum[f.round as keyof typeof RoundEnum],
           groupName: f.groupName,
