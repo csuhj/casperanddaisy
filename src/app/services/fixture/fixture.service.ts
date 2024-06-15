@@ -35,7 +35,7 @@ export class FixtureService {
     return this.getFixtures().pipe(
       map((fixtures) => fixtures
         .sort((a, b)=> a.dateTime.getTime() - b.dateTime.getTime())
-        .find(f => f.dateTime.getTime() > Date.now())
+        .find(f => f.dateTime.getTime() + (2 * 60 * 60 * 1000) > Date.now())
       )
     );
   }
