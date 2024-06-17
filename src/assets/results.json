@@ -7,6 +7,8 @@
         {"home":"Poland","away":"Netherlands","round":"Group","homeGoals":1,"awayGoals":2},
         {"home":"Slovenia","away":"Denmark","round":"Group","homeGoals":1,"awayGoals":1},
         {"home":"Serbia","away":"England","round":"Group","homeGoals":0,"awayGoals":1},
-        {"home":"Romania","away":"Ukraine","round":"Group","homeGoals":3,"awayGoals":0}
+        {"home":"Romania","away":"Ukraine","round":"Group","homeGoals":3,"awayGoals":0},
+        {"home":"Belgium","away":"Slovakia","round":"Group","homeGoals":0,"awayGoals":1}
+
     ]
 }
