@@ -12,13 +12,13 @@ import { GroupTable } from '../../models/group-table/group-table';
 import { Team } from '../../models/team/team';
 
 @Component({
-  selector: 'app-results',
+  selector: 'app-predictions',
   standalone: true,
   imports: [DatePipe],
-  templateUrl: './results.component.html',
-  styleUrl: './results.component.scss'
+  templateUrl: './predictions.component.html',
+  styleUrl: './predictions.component.scss'
 })
-export class ResultsComponent {
+export class PredictionsComponent {
   public fixtures?: Fixture[];
   public venues?: Venue[];
   public groupTables?: GroupTable[];
