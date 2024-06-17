@@ -39,20 +39,18 @@ export class GroupTable {
 
     public static calculateGroupTables(teamsPerGroup: {[groupName: string]: Team[]}, resultsPerGroup: {[groupName: string]: Result[]}) {
         const groupTables: GroupTable[] = [];
-        Object.keys(resultsPerGroup).sort().forEach(groupName => {
+        Object.keys(teamsPerGroup).sort().forEach(groupName => {
           const teamsForGroup = teamsPerGroup[groupName];
-          const resultsForGroup = resultsPerGroup?.[groupName];
-          if (resultsForGroup) {
-            const groupTable = new GroupTable({
-              groupName: groupName,
-              teams: teamsForGroup,
-              results: resultsForGroup,
-            });
+          const resultsForGroup = resultsPerGroup?.[groupName] ?? [];
+          const groupTable = new GroupTable({
+            groupName: groupName,
+            teams: teamsForGroup,
+            results: resultsForGroup,
+          });
 
-            groupTable.calculate();
-            groupTable.sortTable();
-            groupTables?.push(groupTable);
-          }
+          groupTable.calculate();
+          groupTable.sortTable();
+          groupTables?.push(groupTable);
         });
         return groupTables;
     }
