@@ -57,19 +57,22 @@ export class GroupTable {
 
     public static resolveR16Fixtures(fixtures: Fixture[], groupTables: GroupTable[]) {
         const thirdPlaceTableEntries: GroupTableEntry[] = [];
+        const teamToGroupMap: {[team:string]: string} = {};
         groupTables.forEach(groupTable => {
             GroupTable.applyFixtureFromGroupTable(fixtures, groupTable, `1${groupTable.groupName}`);
             GroupTable.applyFixtureFromGroupTable(fixtures, groupTable, `2${groupTable.groupName}`);
 
             thirdPlaceTableEntries.push(groupTable.entries[2]);
+            teamToGroupMap[groupTable.entries[2].team] = groupTable.groupName;
         })
 
-        //TODO: Actually work out proper rules here!
         GroupTableEntry.sortTableEntries(thirdPlaceTableEntries);
-        GroupTable.applyTeamToFixture(fixtures, '3DEF', thirdPlaceTableEntries[0].team)
-        GroupTable.applyTeamToFixture(fixtures, '3ADEF', thirdPlaceTableEntries[1].team)
-        GroupTable.applyTeamToFixture(fixtures, '3ABC', thirdPlaceTableEntries[2].team)
-        GroupTable.applyTeamToFixture(fixtures, '3ABCD', thirdPlaceTableEntries[3].team)
+        const groupAndTeam = thirdPlaceTableEntries.map(e => {return {group: teamToGroupMap[e.team], team: e.team}});
+
+        this.apply3rdPlaceTeamToFixture(fixtures, groupAndTeam, 'DEF');
+        this.apply3rdPlaceTeamToFixture(fixtures, groupAndTeam, 'ADEF');
+        this.apply3rdPlaceTeamToFixture(fixtures, groupAndTeam, 'ABC');
+        this.apply3rdPlaceTeamToFixture(fixtures, groupAndTeam, 'ABCD');
     }
 
     public static resolveKnockoutFixtures(fixtures: Fixture[], previousRoundResults: Result[], round: RoundEnum) {
@@ -117,5 +120,19 @@ export class GroupTable {
         } else if (fixture.away === fixtureName) {
             fixture.away = teamName;
         }
+    }
+
+    private static apply3rdPlaceTeamToFixture(fixtures: Fixture[], groupAndTeam: {group: string, team: string}[], groupsToSearchFor: string) {
+        const groupsToSearchForArray = groupsToSearchFor.split('');
+        const teamIndex = groupAndTeam.findIndex(gt => groupsToSearchForArray.find(g => g === gt.group) !== undefined);
+        if (teamIndex < 0) {
+            return;
+        }
+
+        const team = groupAndTeam[teamIndex].team;
+        const fixtureName = `3${groupsToSearchFor}`;
+        GroupTable.applyTeamToFixture(fixtures, fixtureName, team);
+
+        groupAndTeam.splice(teamIndex, 1);
     }
 }
