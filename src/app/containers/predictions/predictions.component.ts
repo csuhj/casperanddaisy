@@ -4,17 +4,18 @@ import { Venue } from '../../models/venue/venue';
 import { FixtureService } from '../../services/fixture/fixture.service';
 import { VenueService } from '../../services/venue/venue.service';
 import { Subject, combineLatest, takeUntil } from 'rxjs';
-import { DatePipe } from '@angular/common';
 import { PredictionService } from '../../services/prediction/prediction.service';
 import { Result } from '../../models/result/result';
 import { TeamService } from '../../services/team/team.service';
 import { GroupTable } from '../../models/group-table/group-table';
 import { Team } from '../../models/team/team';
+import { GroupTableComponent } from '../../components/group-table/group-table.component';
+import { ScoresListComponent } from '../../components/scores-list/scores-list.component';
 
 @Component({
   selector: 'app-predictions',
   standalone: true,
-  imports: [DatePipe],
+  imports: [GroupTableComponent, ScoresListComponent],
   templateUrl: './predictions.component.html',
   styleUrl: './predictions.component.scss'
 })
@@ -25,7 +26,7 @@ export class PredictionsComponent {
   public r16Results?: Result[];
   public qfResults?: Result[];
   public sfResults?: Result[];
-  public fResult?: Result;
+  public fResults?: Result[];
 
   private readonly destroy$ = new Subject<void>();
 
@@ -74,7 +75,7 @@ export class PredictionsComponent {
         }
 
         GroupTable.resolveKnockoutFixtures(fixtures, this.sfResults, RoundEnum.F);
-        this.fResult = this.predictResultsForRound(RoundEnum.F, teams)?.[0];
+        this.fResults = this.predictResultsForRound(RoundEnum.F, teams);
 
         this.changeDetectorRef.detectChanges();
       });

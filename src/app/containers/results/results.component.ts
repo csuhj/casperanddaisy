@@ -4,16 +4,17 @@ import { Venue } from '../../models/venue/venue';
 import { FixtureService } from '../../services/fixture/fixture.service';
 import { VenueService } from '../../services/venue/venue.service';
 import { Subject, combineLatest, takeUntil } from 'rxjs';
-import { DatePipe } from '@angular/common';
 import { Result } from '../../models/result/result';
 import { TeamService } from '../../services/team/team.service';
 import { GroupTable } from '../../models/group-table/group-table';
 import { ResultService } from '../../services/result/result.service';
+import { GroupTableComponent } from '../../components/group-table/group-table.component';
+import { ScoresListComponent } from '../../components/scores-list/scores-list.component';
 
 @Component({
   selector: 'app-results',
   standalone: true,
-  imports: [DatePipe],
+  imports: [GroupTableComponent, ScoresListComponent],
   templateUrl: './results.component.html',
   styleUrl: './results.component.scss'
 })
@@ -24,7 +25,7 @@ export class ResultsComponent {
   public r16Results?: Result[];
   public qfResults?: Result[];
   public sfResults?: Result[];
-  public fResult?: Result;
+  public fResults?: Result[];
 
   private readonly destroy$ = new Subject<void>();
 
@@ -74,7 +75,7 @@ export class ResultsComponent {
         }
 
         GroupTable.resolveKnockoutFixtures(fixtures, this.sfResults, RoundEnum.F);
-        this.fResult = results.filter(r => r.round === RoundEnum.F)?.[0];
+        this.fResults = results.filter(r => r.round === RoundEnum.F);
 
         this.changeDetectorRef.detectChanges();
       });

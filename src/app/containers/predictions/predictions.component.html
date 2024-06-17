@@ -1,71 +1,14 @@
 <article style="max-width: 1000px; margin: auto;">
   <h1>Predictions</h1>
-  @if (groupTables) {
-    @for (groupTable of groupTables; track groupTable) {
-      <h3>Group {{ groupTable.groupName }}</h3>
-      <table style="gap: 5px">
-        <tr>
-          <th>Team</th>
-          <th>P</th>
-          <th>W</th>
-          <th>L</th>
-          <th>D</th>
-          <th>F</th>
-          <th>A</th>
-          <th>GD</th>
-          <th>Pts</th>
-        </tr>
-        @for (entry of groupTable.entries; track entry) {
-          <tr>
-            <td>{{ entry.team }}</td>
-            <td>{{ entry.played }}</td>
-            <td>{{ entry.won }}</td>
-            <td>{{ entry.lost }}</td>
-            <td>{{ entry.drawn }}</td>
-            <td>{{ entry.for }}</td>
-            <td>{{ entry.against }}</td>
-            <td>{{ entry.goalDifference }}</td>
-            <td>{{ entry.points }}</td>
-          </tr>
-        }
-      </table>
-      <ul>
-        @for (result of groupTable.results; track result) {
-        <li style="margin: 8px">
-          <div>{{ result.fullScoreLineString() }}</div>
-        </li>
-        }
-      </ul>
-    }
-    <h3>Round of 16</h3>
-    <ul>
-      @for (result of r16Results; track result) {
-      <li style="margin: 8px">
-        <div>{{ result.fullScoreLineString() }}</div>
-      </li>
-      }
-    </ul>
-    <h3>Quarter-finals</h3>
-    <ul>
-      @for (result of qfResults; track result) {
-      <li style="margin: 8px">
-        <div>{{ result.fullScoreLineString() }}</div>
-      </li>
-      }
-    </ul>
-    <h3>Semi-finals</h3>
-    <ul>
-      @for (result of sfResults; track result) {
-      <li style="margin: 8px">
-        <div>{{ result.fullScoreLineString() }}</div>
-      </li>
-      }
-    </ul>
-    <h3>Final</h3>
-    <ul>
-      <li style="margin: 8px">
-        <div>{{ fResult?.fullScoreLineString() }}</div>
-      </li>
-    </ul>
+  @for (groupTable of groupTables; track groupTable) {
+    <app-group-table [groupTable]="groupTable" />
   }
+  <h3>Round of 16</h3>
+  <app-scores-list [results]="r16Results" />
+  <h3>Quarter-finals</h3>
+  <app-scores-list [results]="qfResults" />
+  <h3>Semi-finals</h3>
+  <app-scores-list [results]="sfResults" />
+  <h3>Final</h3>
+  <app-scores-list [results]="fResults" />
 </article>

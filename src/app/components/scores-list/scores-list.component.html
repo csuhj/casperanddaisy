@@ -1,0 +1,9 @@
+<section>
+    <ul>
+      @for (result of results; track result) {
+        <li style="margin: 8px">
+            <div>{{ result.fullScoreLineString() }}</div>
+        </li>
+      }
+    </ul>
+</section>

@@ -1,0 +1,30 @@
+<section>
+    <h3>Group {{ groupTable?.groupName ?? '?' }}</h3>
+    <table style="gap: 5px">
+      <tr>
+        <th>Team</th>
+        <th>P</th>
+        <th>W</th>
+        <th>L</th>
+        <th>D</th>
+        <th>F</th>
+        <th>A</th>
+        <th>GD</th>
+        <th>Pts</th>
+      </tr>
+      @for (entry of groupTable?.entries; track entry) {
+        <tr>
+          <td>{{ entry.team }}</td>
+          <td>{{ entry.played }}</td>
+          <td>{{ entry.won }}</td>
+          <td>{{ entry.lost }}</td>
+          <td>{{ entry.drawn }}</td>
+          <td>{{ entry.for }}</td>
+          <td>{{ entry.against }}</td>
+          <td>{{ entry.goalDifference }}</td>
+          <td>{{ entry.points }}</td>
+        </tr>
+        }
+    </table>
+    <app-scores-list [results]="groupTable?.results" />
+</section>
