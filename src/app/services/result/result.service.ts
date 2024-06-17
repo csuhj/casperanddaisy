@@ -16,18 +16,20 @@ export class ResultService {
   public getResults() {
     return this.http.get<IResults>("./assets/results.json")
     .pipe(
-      map((results) => results?.results?.map(r => {
-        return new Result({
-          home: r.home,
-          away: r.away,
-          homeGoals: r.homeGoals,
-          homeShootoutPenalties: r.homeShootoutPenalties,
-          awayGoals: r.awayGoals,
-          awayShootoutPenalties: r.awayShootoutPenalties,
-          round: RoundEnum[r.round as keyof typeof RoundEnum],
-          type: ResultTypeEnum.Actual,
-        });
-      }) ?? []
+      map((results) => results?.results
+        ?.filter(r => r.homeGoals !== undefined && r.awayGoals !== undefined)
+        .map(r => {
+          return new Result({
+            home: r.home,
+            away: r.away,
+            homeGoals: r.homeGoals,
+            homeShootoutPenalties: r.homeShootoutPenalties,
+            awayGoals: r.awayGoals,
+            awayShootoutPenalties: r.awayShootoutPenalties,
+            round: RoundEnum[r.round as keyof typeof RoundEnum],
+            type: ResultTypeEnum.Actual,
+          });
+        }) ?? []
     ));
   }
 }
