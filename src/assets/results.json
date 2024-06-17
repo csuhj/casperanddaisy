@@ -1,0 +1,11 @@
+{
+    "results": [
+        {"home":"Germany","away":"Scotland","round":"Group","homeGoals":5,"awayGoals":1},
+        {"home":"Hungary","away":"Switzerland","round":"Group","homeGoals":1,"awayGoals":3},
+        {"home":"Spain","away":"Croatia","round":"Group","homeGoals":3,"awayGoals":0},
+        {"home":"Italy","away":"Albania","round":"Group","homeGoals":2,"awayGoals":1},
+        {"home":"Poland","away":"Netherlands","round":"Group","homeGoals":1,"awayGoals":2},
+        {"home":"Slovenia","away":"Denmark","round":"Group","homeGoals":1,"awayGoals":1},
+        {"home":"Serbia","away":"England","round":"Group","homeGoals":0,"awayGoals":1}
+    ]
+}

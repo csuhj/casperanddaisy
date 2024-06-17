@@ -1,3 +1,5 @@
+import { RoundEnum } from "../fixture/fixture";
+
 export enum ResultTypeEnum {
     Actual = 'Actual',
     Prediction = 'Prediction'
@@ -10,6 +12,7 @@ export class Result {
     public away: string;
     public awayGoals: number;
     public awayShootoutPenalties?: number;
+    public round: RoundEnum;
     public type: ResultTypeEnum;
 
     public get winner() {
@@ -40,6 +43,7 @@ export class Result {
         this.away = result?.away ?? '';
         this.awayGoals = result?.awayGoals ?? 0;
         this.awayShootoutPenalties = result?.awayShootoutPenalties;
+        this.round = result?.round ?? RoundEnum.Group;
         this.type = result?.type ?? ResultTypeEnum.Actual;
     }
 

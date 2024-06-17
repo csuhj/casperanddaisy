@@ -62,6 +62,7 @@ export class PredictionService {
       awayGoals,
       homeShootoutPenalties,
       awayShootoutPenalties,
+      round,
       type: ResultTypeEnum.Prediction
     });
   }
