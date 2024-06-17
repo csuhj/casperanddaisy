@@ -4,7 +4,7 @@ import { Venue } from '../../models/venue/venue';
 import { FixtureService } from '../../services/fixture/fixture.service';
 import { VenueService } from '../../services/venue/venue.service';
 import { Subject, combineLatest, takeUntil } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgStyle } from '@angular/common';
 import { PredictionService } from '../../services/prediction/prediction.service';
 import { Result } from '../../models/result/result';
 import { TeamService } from '../../services/team/team.service';
@@ -12,7 +12,7 @@ import { TeamService } from '../../services/team/team.service';
 @Component({
   selector: 'app-fixtures',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, NgStyle],
   templateUrl: './fixtures.component.html',
   styleUrl: './fixtures.component.scss'
 })

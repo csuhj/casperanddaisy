@@ -2,7 +2,7 @@
   <h1>Fixtures</h1>
   <ul>
   @for (fixture of fixtures; track fixture) {
-    <li style="margin: 8px">
+    <li style="margin: 8px" [ngStyle]="{'background-color': fixture.isToday ? '#ffff00' : null }">
       <div>{{ fixture.dateTime | date: 'dd/MM/yy HH:mm' }} {{ fixture.home }} v {{ fixture.away }}</div>
       <div>{{ fixture.round }} {{ fixture.groupName }} {{ fixture.venueCity }}</div>
       <div>Prediction: {{ getGroupPrediction(fixture)?.scoreLineString() ?? '' }}</div>

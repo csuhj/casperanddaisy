@@ -17,6 +17,10 @@ export class Fixture {
     public groupName: string;
     public venueCity: string;
 
+    public get isToday() {
+      return this.dateTime.toDateString() === new Date(Date.now()).toDateString();
+    }
+
     public constructor(fixture: Partial<Fixture>) {
         this.match = fixture?.match ?? 1;
         this.dateTime = fixture?.dateTime ?? new Date(2024, 0, 1, 12, 0, 0);
