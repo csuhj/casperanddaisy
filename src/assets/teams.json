@@ -19,7 +19,7 @@
         {"name":"Serbia", "ranking":33, "madfut": { "bestDefender":81, "rankedSquadPlayers":1, "bestKeeper":80, "top5Attackers":[83, 83, 82, 79, 77] }},
         {"name":"Czechia", "ranking":36, "madfut": { "bestDefender":79, "rankedSquadPlayers":0, "bestKeeper":77, "top5Attackers":[83, 77, 76, 76, 75] }},
         {"name":"Scotland", "ranking":39, "madfut": { "bestDefender":86, "rankedSquadPlayers":1, "bestKeeper":74, "top5Attackers":[76, 75, 74, 74, 74] }},
-        {"name":"Turkey", "ranking":40, "madfut": { "bestDefender":78, "rankedSquadPlayers":1, "bestKeeper":78, "top5Attackers":[82, 78, 77, 77, 75] }},
+        {"name":"Türkiye", "ranking":40, "madfut": { "bestDefender":78, "rankedSquadPlayers":1, "bestKeeper":78, "top5Attackers":[82, 78, 77, 77, 75] }},
         {"name":"Romania", "ranking":46, "madfut": { "bestDefender":64, "rankedSquadPlayers":0, "bestKeeper":64, "top5Attackers":[76, 73, 64, 64, 64] }},
         {"name":"Slovakia", "ranking":48, "madfut": { "bestDefender":84, "rankedSquadPlayers":2, "bestKeeper":78, "top5Attackers":[76, 74, 74, 0, 0] }},
         {"name":"Slovenia", "ranking":57, "madfut": { "bestDefender":75, "rankedSquadPlayers":1, "bestKeeper":88, "top5Attackers":[75, 73, 0, 0, 0] }},
