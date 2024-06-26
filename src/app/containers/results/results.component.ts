@@ -33,32 +33,19 @@ export class ResultsComponent {
 
   private readonly destroy$ = new Subject<void>();
 
-  public constructor(private changeDetectorRef: ChangeDetectorRef, private fixtureService: FixtureService, private venueService: VenueService, private teamService: TeamService, private resultService: ResultService) {}
+  public constructor(private changeDetectorRef: ChangeDetectorRef, private fixtureService: FixtureService, private teamService: TeamService, private resultService: ResultService) {}
 
   ngOnInit(): void {
     combineLatest([
       this.fixtureService.getFixtures(),
-      this.venueService.getVenues(),
       this.teamService.getTeams(),
       this.resultService.getResults(),
     ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([fixtures, venues, teams, results]) => {
+      .subscribe(([fixtures, teams, results]) => {
         this.fixtures = fixtures;
-        this.venues = venues;
 
-        const groupResults = results.filter(r => r.round === RoundEnum.Group)
-        if (!groupResults) {
-          return;
-        }
-
-        const resultsPerGroup = 
-          Result.groupResults(groupResults, (home, away) => 
-            fixtures.find(f => f.home === home && f.away === away)?.groupName ?? ''
-          );
-        
-        const teamsPerGroup = Fixture.getTeamsPerGroup(fixtures, teams);
-        this.groupTables = GroupTable.calculateGroupTables(teamsPerGroup, resultsPerGroup);
+        this.groupTables = GroupTable.calculateGroupTables(fixtures, results, teams);
 
         GroupTable.resolveR16Fixtures(fixtures, this.groupTables);
         this.r16Fixtures = fixtures.filter(r => r.round === RoundEnum.R16)

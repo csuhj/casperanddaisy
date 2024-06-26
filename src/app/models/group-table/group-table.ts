@@ -56,22 +56,19 @@ export class GroupTable {
         GroupTableEntry.sortTableEntries(this.entries);
     }
 
-    public static calculateGroupTables(teamsPerGroup: {[groupName: string]: Team[]}, resultsPerGroup: {[groupName: string]: Result[]}) {
-        const groupTables: GroupTable[] = [];
-        Object.keys(teamsPerGroup).sort().forEach(groupName => {
-          const teamsForGroup = teamsPerGroup[groupName];
-          const resultsForGroup = resultsPerGroup?.[groupName] ?? [];
-          const groupTable = new GroupTable({
-            groupName: groupName,
-            teams: teamsForGroup,
-            results: resultsForGroup,
-          });
+    public static calculateGroupTables(fixtures: Fixture[], results: Result[], teams: Team[]) {
+        const groupResults = results.filter(r => r.round === RoundEnum.Group)
+        if (!groupResults) {
+          return [];
+        }
 
-          groupTable.calculate();
-          groupTable.sortTable();
-          groupTables?.push(groupTable);
-        });
-        return groupTables;
+        const resultsPerGroup = 
+          Result.groupResults(groupResults, (home, away) => 
+            fixtures.find(f => f.home === home && f.away === away)?.groupName ?? ''
+          );
+        
+        const teamsPerGroup = Fixture.getTeamsPerGroup(fixtures, teams);
+        return GroupTable.calculateGroupTablesGivenGroupings(teamsPerGroup, resultsPerGroup);
     }
 
     public static resolveR16Fixtures(fixtures: Fixture[], groupTables: GroupTable[]) {
@@ -91,6 +88,39 @@ export class GroupTable {
         this.resolveR163rdPlacePermutations(fixtures, groupAndTeam);
     }
 
+    public static resolveKnockoutFixtures(fixtures: Fixture[], previousRoundResults: Result[], round: RoundEnum) {
+        switch(round) {
+            case RoundEnum.QF:
+            case RoundEnum.SF:
+            case RoundEnum.F:
+                fixtures.filter(f => f.round === round).forEach(fixture => {
+                    GroupTable.applyFixtureFromKnockoutResult(fixtures, previousRoundResults, fixture.home);
+                    GroupTable.applyFixtureFromKnockoutResult(fixtures, previousRoundResults, fixture.away);
+                })
+                break;
+            default:
+                throw new Error(`Can't resolve knockout fixtures from previous round results for the round ${round}`);
+        }
+    }
+
+    private static calculateGroupTablesGivenGroupings(teamsPerGroup: {[groupName: string]: Team[]}, resultsPerGroup: {[groupName: string]: Result[]}) {
+        const groupTables: GroupTable[] = [];
+        Object.keys(teamsPerGroup).sort().forEach(groupName => {
+          const teamsForGroup = teamsPerGroup[groupName];
+          const resultsForGroup = resultsPerGroup?.[groupName] ?? [];
+          const groupTable = new GroupTable({
+            groupName: groupName,
+            teams: teamsForGroup,
+            results: resultsForGroup,
+          });
+
+          groupTable.calculate();
+          groupTable.sortTable();
+          groupTables?.push(groupTable);
+        });
+        return groupTables;
+    }
+
     private static resolveR163rdPlacePermutations(fixtures: Fixture[], groupAndTeam: {group: string, team: string}[]) {
         const permutationGroups = [groupAndTeam[0].group, groupAndTeam[1].group, groupAndTeam[2].group, groupAndTeam[3].group];
         const permutationName = permutationGroups.sort().reduce((partialName, n) => partialName + n, '');
@@ -106,21 +136,6 @@ export class GroupTable {
                 GroupTable.applyTeamToFixture(fixtures, fixtureName, team);
             }
         })
-    }
-
-    public static resolveKnockoutFixtures(fixtures: Fixture[], previousRoundResults: Result[], round: RoundEnum) {
-        switch(round) {
-            case RoundEnum.QF:
-            case RoundEnum.SF:
-            case RoundEnum.F:
-                fixtures.filter(f => f.round === round).forEach(fixture => {
-                    GroupTable.applyFixtureFromKnockoutResult(fixtures, previousRoundResults, fixture.home);
-                    GroupTable.applyFixtureFromKnockoutResult(fixtures, previousRoundResults, fixture.away);
-                })
-                break;
-            default:
-                throw new Error(`Can't resolve knockout fixtures from previous round results for the round ${round}`);
-        }
     }
 
     private static applyFixtureFromGroupTable(fixtures: Fixture[], groupTable: GroupTable, fixtureName: string) {

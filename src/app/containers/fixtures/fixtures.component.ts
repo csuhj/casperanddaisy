@@ -8,6 +8,8 @@ import { DatePipe, NgStyle } from '@angular/common';
 import { PredictionService } from '../../services/prediction/prediction.service';
 import { Result } from '../../models/result/result';
 import { TeamService } from '../../services/team/team.service';
+import { ResultService } from '../../services/result/result.service';
+import { GroupTable } from '../../models/group-table/group-table';
 
 @Component({
   selector: 'app-fixtures',
@@ -23,22 +25,28 @@ export class FixturesComponent {
 
   private readonly destroy$ = new Subject<void>();
 
-  public constructor(private changeDetectorRef: ChangeDetectorRef, private fixtureService: FixtureService, private venueService: VenueService, private teamService: TeamService, private predictionService: PredictionService) {}
+  public constructor(private changeDetectorRef: ChangeDetectorRef, private fixtureService: FixtureService, private venueService: VenueService, private teamService: TeamService, private predictionService: PredictionService, private resultService: ResultService) {}
 
   ngOnInit(): void {
     combineLatest([
       this.fixtureService.getFixtures(),
       this.venueService.getVenues(),
       this.teamService.getTeams(),
+      this.resultService.getResults(),
     ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([fixtures, venues, teams]) => {
+      .subscribe(([fixtures, venues, teams, results]) => {
         this.fixtures = fixtures;
         this.venues = venues;
 
+        const groupTables = GroupTable.calculateGroupTables(fixtures, results, teams);
+        GroupTable.resolveR16Fixtures(fixtures, groupTables);
+        GroupTable.resolveKnockoutFixtures(fixtures, results.filter(r => r.round === RoundEnum.R16), RoundEnum.QF);
+        GroupTable.resolveKnockoutFixtures(fixtures, results.filter(r => r.round === RoundEnum.QF), RoundEnum.SF);
+        GroupTable.resolveKnockoutFixtures(fixtures, results.filter(r => r.round === RoundEnum.SF), RoundEnum.F);
+
         this.predictions = this.fixtures
-          ?.filter(f => f.round === RoundEnum.Group)
-          .map(f => {
+          ?.map(f => {
             const homeTeam = teams.find(t => t.name === f.home);
             const awayTeam = teams.find(t => t.name === f.away);
             return (!homeTeam || !awayTeam)? 
@@ -56,8 +64,6 @@ export class FixturesComponent {
   }
 
   public getGroupPrediction(fixture: Fixture) {
-    return fixture.round !== RoundEnum.Group? 
-      undefined :
-      this.predictions?.find(p => p.home === fixture.home && p.away === fixture.away);
+    return this.predictions?.find(p => p.home === fixture.home && p.away === fixture.away && p.round === fixture.round);
   }
 }
