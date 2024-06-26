@@ -123,7 +123,7 @@ export class GroupTable {
 
     private static resolveR163rdPlacePermutations(fixtures: Fixture[], groupAndTeam: {group: string, team: string}[]) {
         const permutationGroups = [groupAndTeam[0].group, groupAndTeam[1].group, groupAndTeam[2].group, groupAndTeam[3].group];
-        const permutationName = permutationGroups.sort().reduce((partialName, n) => partialName + n, '');
+        const permutationName = permutationGroups.sort().join('');
         const permutation = GroupTable.group3rdPlacePermutations[permutationName];
         if (!permutation) {
             return;
