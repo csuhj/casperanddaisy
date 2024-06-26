@@ -4,6 +4,25 @@ import { Result } from "../result/result";
 import { Team } from "../team/team";
 
 export class GroupTable {
+    // See https://www.uefa.com/euro2024/news/028e-1b3221d55b32-0a95528a80d5-1000--uefa-euro-2024-best-third-placed-teams/
+    private static readonly group3rdPlacePermutations: {[name: string]: {[fixture: string]: string}} = {
+        ['ABCD']: {['3ADEF']: '3A', ['3DEF']: '3D', ['3ABCD']: '3B', ['3ABC']: '3C'},
+        ['ABCE']: {['3ADEF']: '3A', ['3DEF']: '3E', ['3ABCD']: '3B', ['3ABC']: '3C'},
+        ['ABCF']: {['3ADEF']: '3A', ['3DEF']: '3F', ['3ABCD']: '3B', ['3ABC']: '3C'},
+        ['ABDE']: {['3ADEF']: '3D', ['3DEF']: '3E', ['3ABCD']: '3A', ['3ABC']: '3B'},
+        ['ABDF']: {['3ADEF']: '3D', ['3DEF']: '3F', ['3ABCD']: '3A', ['3ABC']: '3B'},
+        ['ABEF']: {['3ADEF']: '3E', ['3DEF']: '3F', ['3ABCD']: '3B', ['3ABC']: '3A'},
+        ['ACDE']: {['3ADEF']: '3E', ['3DEF']: '3D', ['3ABCD']: '3C', ['3ABC']: '3A'},
+        ['ACDF']: {['3ADEF']: '3F', ['3DEF']: '3D', ['3ABCD']: '3C', ['3ABC']: '3A'},
+        ['ACEF']: {['3ADEF']: '3E', ['3DEF']: '3F', ['3ABCD']: '3C', ['3ABC']: '3A'},
+        ['ADEF']: {['3ADEF']: '3E', ['3DEF']: '3F', ['3ABCD']: '3D', ['3ABC']: '3A'},
+        ['BCDE']: {['3ADEF']: '3E', ['3DEF']: '3D', ['3ABCD']: '3B', ['3ABC']: '3C'},
+        ['BCDF']: {['3ADEF']: '3F', ['3DEF']: '3D', ['3ABCD']: '3C', ['3ABC']: '3B'},
+        ['BCEF']: {['3ADEF']: '3F', ['3DEF']: '3E', ['3ABCD']: '3C', ['3ABC']: '3B'},
+        ['BDEF']: {['3ADEF']: '3F', ['3DEF']: '3E', ['3ABCD']: '3D', ['3ABC']: '3B'},
+        ['CDEF']: {['3ADEF']: '3F', ['3DEF']: '3E', ['3ABCD']: '3D', ['3ABC']: '3C'},
+    }
+
     public groupName: string;
     public teams: Team[];
     public entries: GroupTableEntry[];
@@ -69,10 +88,24 @@ export class GroupTable {
         GroupTableEntry.sortTableEntries(thirdPlaceTableEntries);
         const groupAndTeam = thirdPlaceTableEntries.map(e => {return {group: teamToGroupMap[e.team], team: e.team}});
 
-        this.apply3rdPlaceTeamToFixture(fixtures, groupAndTeam, 'DEF');
-        this.apply3rdPlaceTeamToFixture(fixtures, groupAndTeam, 'ADEF');
-        this.apply3rdPlaceTeamToFixture(fixtures, groupAndTeam, 'ABC');
-        this.apply3rdPlaceTeamToFixture(fixtures, groupAndTeam, 'ABCD');
+        this.resolveR163rdPlacePermutations(fixtures, groupAndTeam);
+    }
+
+    private static resolveR163rdPlacePermutations(fixtures: Fixture[], groupAndTeam: {group: string, team: string}[]) {
+        const permutationGroups = [groupAndTeam[0].group, groupAndTeam[1].group, groupAndTeam[2].group, groupAndTeam[3].group];
+        const permutationName = permutationGroups.sort().reduce((partialName, n) => partialName + n, '');
+        const permutation = GroupTable.group3rdPlacePermutations[permutationName];
+        if (!permutation) {
+            return;
+        }
+
+        Object.keys(permutation).forEach(fixtureName => {
+            const group = permutation[fixtureName]?.substring(1,2);
+            const team = groupAndTeam.find(gt => gt.group === group)?.team;
+            if (team) {
+                GroupTable.applyTeamToFixture(fixtures, fixtureName, team);
+            }
+        })
     }
 
     public static resolveKnockoutFixtures(fixtures: Fixture[], previousRoundResults: Result[], round: RoundEnum) {
@@ -120,19 +153,5 @@ export class GroupTable {
         } else if (fixture.away === fixtureName) {
             fixture.away = teamName;
         }
-    }
-
-    private static apply3rdPlaceTeamToFixture(fixtures: Fixture[], groupAndTeam: {group: string, team: string}[], groupsToSearchFor: string) {
-        const groupsToSearchForArray = groupsToSearchFor.split('');
-        const teamIndex = groupAndTeam.findIndex(gt => groupsToSearchForArray.find(g => g === gt.group) !== undefined);
-        if (teamIndex < 0) {
-            return;
-        }
-
-        const team = groupAndTeam[teamIndex].team;
-        const fixtureName = `3${groupsToSearchFor}`;
-        GroupTable.applyTeamToFixture(fixtures, fixtureName, team);
-
-        groupAndTeam.splice(teamIndex, 1);
     }
 }

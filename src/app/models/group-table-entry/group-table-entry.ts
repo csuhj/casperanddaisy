@@ -31,6 +31,9 @@ export class GroupTableEntry {
             if (x.goalDifference !== y.goalDifference) {
                 return y.goalDifference - x.goalDifference;
             }
+            if (x.for !== y.for) {
+                return y.for - x.for;
+            }
             return x.team.localeCompare(y.team);
         });
     }
