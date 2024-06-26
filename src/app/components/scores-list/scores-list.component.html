@@ -1,9 +1,18 @@
 <section>
     <ul>
-      @for (result of results; track result) {
-        <li style="margin: 8px">
+      @if (results && results.length > 0) {
+        @for (result of results; track result) {
+          <li style="margin: 8px">
             <div>{{ result.fullScoreLineString() }}</div>
-        </li>
+          </li>
+        }
+      }
+      @else {
+        @for (fixture of fixtures; track fixture) {
+          <li style="margin: 8px">
+            <div>{{ fixture.simpleFixtureString() }}</div>
+          </li>  
+        }
       }
     </ul>
 </section>

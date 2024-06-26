@@ -31,6 +31,10 @@ export class Fixture {
         this.venueCity = fixture?.venueCity ?? '';
     }
 
+    public simpleFixtureString(): string {
+      return `${this.home} - ${this.away}`;
+    }
+
     public static getTeamsPerGroup(fixtures: Fixture[], teams: Team[]) {
         const teamsPerGroup: {[groupName: string]: Team[]} = {};
         fixtures.filter(f => f.round === RoundEnum.Group).forEach(fixture => {

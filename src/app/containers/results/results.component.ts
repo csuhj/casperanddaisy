@@ -22,9 +22,13 @@ export class ResultsComponent {
   public fixtures?: Fixture[];
   public venues?: Venue[];
   public groupTables?: GroupTable[];
+  public r16Fixtures?: Fixture[];
   public r16Results?: Result[];
+  public qfFixtures?: Fixture[];
   public qfResults?: Result[];
+  public sfFixtures?: Fixture[];
   public sfResults?: Result[];
+  public fFixtures?: Fixture[];
   public fResults?: Result[];
 
   private readonly destroy$ = new Subject<void>();
@@ -57,24 +61,28 @@ export class ResultsComponent {
         this.groupTables = GroupTable.calculateGroupTables(teamsPerGroup, resultsPerGroup);
 
         GroupTable.resolveR16Fixtures(fixtures, this.groupTables);
+        this.r16Fixtures = fixtures.filter(r => r.round === RoundEnum.R16)
         this.r16Results = results.filter(r => r.round === RoundEnum.R16)
         if (!this.r16Results) {
           return;
         }
 
         GroupTable.resolveKnockoutFixtures(fixtures, this.r16Results, RoundEnum.QF);
+        this.qfFixtures = fixtures.filter(r => r.round === RoundEnum.QF)
         this.qfResults = results.filter(r => r.round === RoundEnum.QF)
         if (!this.qfResults) {
           return;
         }
 
         GroupTable.resolveKnockoutFixtures(fixtures, this.qfResults, RoundEnum.SF);
+        this.sfFixtures = fixtures.filter(r => r.round === RoundEnum.SF)
         this.sfResults = results.filter(r => r.round === RoundEnum.SF)
         if (!this.sfResults) {
           return;
         }
 
         GroupTable.resolveKnockoutFixtures(fixtures, this.sfResults, RoundEnum.F);
+        this.fFixtures = fixtures.filter(r => r.round === RoundEnum.F)
         this.fResults = results.filter(r => r.round === RoundEnum.F);
 
         this.changeDetectorRef.detectChanges();
