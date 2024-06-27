@@ -35,6 +35,12 @@ export class Fixture {
       return `${this.home} - ${this.away}`;
     }
 
+    public static getNextFixture(fixtures: Fixture[]) {
+      return fixtures
+        .sort((a, b)=> a.dateTime.getTime() - b.dateTime.getTime())
+        .find(f => f.dateTime.getTime() + (2 * 60 * 60 * 1000) > Date.now())
+    }
+
     public static getTeamsPerGroup(fixtures: Fixture[], teams: Team[]) {
         const teamsPerGroup: {[groupName: string]: Team[]} = {};
         fixtures.filter(f => f.round === RoundEnum.Group).forEach(fixture => {
