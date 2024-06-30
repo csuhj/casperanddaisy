@@ -12,6 +12,7 @@ export class Result {
     public away: string;
     public awayGoals: number;
     public awayShootoutPenalties?: number;
+    public extraTime: boolean;
     public round: RoundEnum;
     public type: ResultTypeEnum;
 
@@ -43,6 +44,7 @@ export class Result {
         this.away = result?.away ?? '';
         this.awayGoals = result?.awayGoals ?? 0;
         this.awayShootoutPenalties = result?.awayShootoutPenalties;
+        this.extraTime = result?.extraTime ?? false;
         this.round = result?.round ?? RoundEnum.Group;
         this.type = result?.type ?? ResultTypeEnum.Actual;
     }
@@ -79,19 +81,19 @@ export class Result {
 
     public resultString(): string {
         if (this.homeGoals > this.awayGoals) {
-            return `${this.home} win!`;
+            return `${this.home} win${this.extraTime? ' after extra time':'' }!`;
         } else if (this.awayGoals > this.homeGoals) {
-            return `${this.away} win!`;
+            return `${this.away} win${this.extraTime? ' after extra time':'' }!`;
         } else {
             if (this.homeShootoutPenalties === undefined || this.awayShootoutPenalties === undefined) {
                 return 'Draw!';
             } else {
                 if (this.homeShootoutPenalties > this.awayShootoutPenalties) {
-                    return `${this.home} win on penalties!`;
+                    return `${this.home} win after extra time and penalties!`;
                 } else if (this.awayShootoutPenalties > this.homeShootoutPenalties) {
-                    return `${this.away} win on penalties!`;
+                    return `${this.away} win after extra time and penalties!`;
                 } else {
-                    return 'Draw after penalty shootout!?!';
+                    return 'Draw after extra time and penalty shootout!?!';
                 }
             }
         }
@@ -99,7 +101,7 @@ export class Result {
 
     public scoreLineString(): string {
         if (this.homeShootoutPenalties === undefined || this.awayShootoutPenalties === undefined) {
-            return `${this.homeGoals} - ${this.awayGoals}`;
+            return `${this.homeGoals} - ${this.awayGoals}${this.extraTime? ' aet' : ''}`;
         } else {
             return `${this.homeGoals} - ${this.awayGoals} (${this.homeShootoutPenalties} - ${this.awayShootoutPenalties})`;
         }
@@ -107,7 +109,7 @@ export class Result {
 
     public fullScoreLineString(): string {
         if (this.homeShootoutPenalties === undefined || this.awayShootoutPenalties === undefined) {
-            return `${this.home} ${this.homeGoals} - ${this.awayGoals} ${this.away}`;
+            return `${this.home} ${this.homeGoals} - ${this.awayGoals} ${this.away}${this.extraTime? ' (after extra time)': ''}`;
         } else {
             let penaltiesScoreLine;
             if (this.homeShootoutPenalties > this.awayShootoutPenalties) {
@@ -117,7 +119,7 @@ export class Result {
             } else {
                 penaltiesScoreLine = 'draw after penalty shootout!?!';
             }
-            return `${this.home} ${this.homeGoals} - ${this.awayGoals} ${this.away} (${penaltiesScoreLine})`;
+            return `${this.home} ${this.homeGoals} - ${this.awayGoals} ${this.away} (aet, ${penaltiesScoreLine})`;
         }
     }
 

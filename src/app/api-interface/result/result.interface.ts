@@ -6,4 +6,5 @@ export interface IResult {
     homeShootoutPenalties?: number;
     awayGoals: number;
     awayShootoutPenalties?: number;
+    extraTime?: boolean
 }

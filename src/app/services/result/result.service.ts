@@ -26,6 +26,7 @@ export class ResultService {
             homeShootoutPenalties: r.homeShootoutPenalties,
             awayGoals: r.awayGoals,
             awayShootoutPenalties: r.awayShootoutPenalties,
+            extraTime: r.extraTime,
             round: RoundEnum[r.round as keyof typeof RoundEnum],
             type: ResultTypeEnum.Actual,
           });
