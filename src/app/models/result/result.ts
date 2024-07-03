@@ -44,7 +44,7 @@ export class Result {
         this.away = result?.away ?? '';
         this.awayGoals = result?.awayGoals ?? 0;
         this.awayShootoutPenalties = result?.awayShootoutPenalties;
-        this.extraTime = result?.extraTime ?? false;
+        this.extraTime = result?.extraTime ?? (!!result?.homeShootoutPenalties || !!result?.awayShootoutPenalties);
         this.round = result?.round ?? RoundEnum.Group;
         this.type = result?.type ?? ResultTypeEnum.Actual;
     }
