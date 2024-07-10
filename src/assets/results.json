@@ -48,8 +48,8 @@
         {"home":"Portugal","away":"France","round":"QF","homeGoals":0,"awayGoals":0,"homeShootoutPenalties":3,"awayShootoutPenalties":5},
         {"home":"England","away":"Switzerland","round":"QF","homeGoals":1,"awayGoals":1,"homeShootoutPenalties":5,"awayShootoutPenalties":3},
         {"home":"Netherlands","away":"Türkiye","round":"QF","homeGoals":2,"awayGoals":1},
-        {"home":"W45","away":"W46","round":"SF"},
-        {"home":"W47","away":"W48","round":"SF"},
+        {"home":"Spain","away":"France","round":"SF","homeGoals":2,"awayGoals":1},
+        {"home":"Netherlands","away":"England","round":"SF"},
         {"home":"W49","away":"W50","round":"F"}
     ]
 }
