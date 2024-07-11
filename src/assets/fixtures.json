@@ -49,7 +49,7 @@
         {"match":47,"date":"06/07/2024","time":"17:00","home":"W39","away":"W37","round":"QF","groupName":"","venue":"Düsseldorf"},
         {"match":48,"date":"06/07/2024","time":"20:00","home":"W43","away":"W44","round":"QF","groupName":"","venue":"Berlin"},
         {"match":49,"date":"09/07/2024","time":"20:00","home":"W45","away":"W46","round":"SF","groupName":"","venue":"Munich"},
-        {"match":50,"date":"10/07/2024","time":"20:00","home":"W47","away":"W48","round":"SF","groupName":"","venue":"Dortmund"},
+        {"match":50,"date":"10/07/2024","time":"20:00","home":"W48","away":"W47","round":"SF","groupName":"","venue":"Dortmund"},
         {"match":51,"date":"14/07/2024","time":"20:00","home":"W49","away":"W50","round":"F","groupName":"","venue":"Berlin"}
     ]
 }
