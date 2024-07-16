@@ -12,16 +12,18 @@ import { TeamService } from '../../services/team/team.service';
 import { PredictionService } from '../../services/prediction/prediction.service';
 import { GroupTable } from '../../models/group-table/group-table';
 import { ResultService } from '../../services/result/result.service';
+import { WinnerComponent } from '../../components/winner/winner.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeroComponent, NextFixtureComponent, PredictionComponent],
+  imports: [HeroComponent, NextFixtureComponent, PredictionComponent, WinnerComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
   public nextFixture?: Fixture;
+  public winner?: string;
   public nextFixtureVenue?: Venue;
   public nextFixturePrediction?: Result;
 
@@ -55,6 +57,8 @@ export class HomeComponent {
         } else {
           this.nextFixturePrediction = undefined;
         }
+
+        this.winner = results.find(r => r.round === RoundEnum.F)?.winner;
 
         this.changeDetectorRef.detectChanges();
       });

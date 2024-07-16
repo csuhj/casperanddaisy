@@ -1,5 +1,13 @@
 <article style="max-width: 1000px; margin: auto;">
   <app-hero />
-  <app-next-fixture [fixture]="nextFixture" [venue]="nextFixtureVenue" />
-  <app-prediction [prediction]="nextFixturePrediction" />
+  @if (nextFixture) {
+    <app-next-fixture [fixture]="nextFixture" [venue]="nextFixtureVenue" />
+    <app-prediction [prediction]="nextFixturePrediction" />
+  }
+  @else if (winner) {
+    <app-winner [teamName]="winner" />
+  }
+  @else {
+    <h3>There is no next fixture but also no winner - what on earth happened?!?</h3>
+  }
 </article>
